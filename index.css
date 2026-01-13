@@ -1,0 +1,48 @@
+/* Isso faz com que os itens filtrados sumam */
+.hide {
+    display: none !important;
+}
+
+/* Estética básica para o link aparecer bem */
+.site-title {
+    display: block;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: blue;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+.searchw {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+}
+
+input {
+    font-size: 1rem;
+}
+
+.proj {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: .25rem;
+    margin-top: 1rem;
+
+}
+
+.projs {
+    background-color: white;
+    padding: .5rem;
+    border: 2px solid black;
+}
+.projs > .site{
+    margin-bottom: .25rem;
+}
+
+.projs > .desc{
+    font-size: .8rem;
+    color: #777;
+}
+.hide{
+    display: none;
+}
