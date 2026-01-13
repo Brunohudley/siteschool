@@ -5,7 +5,7 @@ const searchInput = document.querySelector("#search")
 let proj = []
 
 // Busca e renderização inicial
-fetch("brunohudley.github.io")
+fetch("https://brunohudley.github.io/siteschool/sites.json")
     .then(res => res.json())
     .then(data => {
         proj = data.map(item => {
