@@ -4,27 +4,12 @@ const searchInput = document.querySelector("#search")
 
 let proj = []
 
-// Lógica da Barra de Busca
-searchInput.addEventListener("input", (e) => {
-    const value = e.target.value.toLowerCase()
-    proj.forEach(p => {
-        // Verifica se o texto pesquisado está no título ou na descrição
-        const isVisible = p.site.toLowerCase().includes(value) || 
-                          p.desc.toLowerCase().includes(value)
-        
-        // toggle adiciona a classe "hide" se isVisible for false
-        p.element.classList.toggle("hide", !isVisible)
-    })
-})
-
-// Busca e renderização inicial
+// Busca e renderização
 fetch("https://brunohudley.github.io/siteschool/sites.json")
     .then(res => res.json())
     .then(data => {
         proj = data.map(item => {
-            // Clona o conteúdo do template
             const cardClone = SiteTemplate.content.cloneNode(true)
-            // Pega o elemento real (a div .projs)
             const card = cardClone.firstElementChild 
             
             const siteElement = card.querySelector("[site]")
@@ -35,15 +20,22 @@ fetch("https://brunohudley.github.io/siteschool/sites.json")
             siteElement.href = item.link
             descElement.textContent = item.desc
             
-            // Adiciona ao container na tela
             SiteContainer.append(card)
             
-            // Retorna o objeto para a lista de busca
+            // Salva para a busca funcionar (em minúsculo para comparar melhor)
             return { 
-                site: item.site, 
-                desc: item.desc, 
+                site: item.site.toLowerCase(), 
+                desc: item.desc.toLowerCase(), 
                 element: card 
             }
         })
     })
-    .catch(err => console.error("Erro ao carregar o JSON. Verifique as vírgulas!", err))
+
+// Lógica de busca insensível a maiúsculas/minúsculas
+searchInput.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase()
+    proj.forEach(p => {
+        const isVisible = p.site.includes(value) || p.desc.includes(value)
+        p.element.classList.toggle("hide", !isVisible)
+    })
+})
