@@ -3,5 +3,10 @@
         "site": "Index page",
         "desc": "Pagina principal",
         "link": "https://brunohudley.github.io/siteschool/index.html"
+    },
+    {
+        "site": "Sites json",
+        "desc": "Mostra Sites"
+        "link": "https://brunohudley.github.io/siteschool/sites.json"
     }
 ]
