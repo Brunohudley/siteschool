@@ -1,43 +1,39 @@
 const SiteTemplate = document.querySelector("[utemplate]")
 const SiteContainer = document.querySelector("[sitec]")
-const searchInput = document.querySelector("#search") // Selecione o input diretamente
+const searchInput = document.querySelector("#search")
 
 let proj = []
 
-searchInput.addEventListener("input", (e) => {
-    const value = e.target.value.toLowerCase()
-    proj.forEach(project => {
-        // Se o nome ou desc incluir o valor, isVisible é true
-        const isVisible = project.site.toLowerCase().includes(value) || 
-                          project.desc.toLowerCase().includes(value)
-        
-        // toggle "hide" se NÃO for visível
-        project.element.classList.toggle("hide", !isVisible)
-    })
-})
-
+// Busca e renderização inicial
 fetch("brunohudley.github.io")
     .then(res => res.json())
     .then(data => {
         proj = data.map(item => {
-            // Clona o conteúdo do template
-            const card = SiteTemplate.content.cloneNode(true).children[0]
+            // 1. Clona o conteúdo do template
+            const card = SiteTemplate.content.cloneNode(true).querySelector(".projs")
             
-            const siteAnchor = card.querySelector("[site]")
+            // 2. Seleciona os elementos INTERNOS do card clonado
+            const siteElement = card.querySelector("[site]")
             const descElement = card.querySelector("[desc]")
 
-            // Preenche o texto e o endereço do link
-            siteAnchor.textContent = item.site
-            siteAnchor.href = item.link // Define o destino do link
+            // 3. Preenche os dados (Nome, Link e Descrição)
+            siteElement.textContent = item.site; // O texto do link
+            siteElement.href = item.link || item.url; // O endereço (ajuste conforme seu JSON)
+            descElement.textContent = item.desc;
             
-            descElement.textContent = item.desc
-            
+            // 4. Coloca o card na tela
             SiteContainer.append(card)
             
-            return { 
-                site: item.site, 
-                desc: item.desc, 
-                element: card 
-            }
+            // Retorna o objeto para a busca funcionar depois
+            return { site: item.site, desc: item.desc, element: card }
         });
     })
+
+// Lógica da Barra de Busca
+searchInput.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase()
+    proj.forEach(p => {
+        const isVisible = p.site.toLowerCase().includes(value) || p.desc.toLowerCase().includes(value)
+        p.element.classList.toggle("hide", !isVisible)
+    })
+})
