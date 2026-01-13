@@ -4,37 +4,37 @@ const searchInput = document.querySelector("#search")
 
 let proj = []
 
-// Busca e renderização inicial
-fetch("https://brunohudley.github.io/siteschool/sites.json")
-    .then(res => {
-        if (!res.ok) throw new Error("Erro ao carregar JSON");
-        return res.json();
+searchInput.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase()
+    proj.forEach(p => {
+        // Verifica se p.site e p.desc existem antes de dar toLowerCase
+        const siteName = p.site ? p.site.toLowerCase() : ""
+        const siteDesc = p.desc ? p.desc.toLowerCase() : ""
+        const isVisible = siteName.includes(value) || siteDesc.includes(value)
+        p.element.classList.toggle("hide", !isVisible)
     })
+})
+
+fetch("https://brunohudley.github.io/siteschool/sites.json")
+    .then(res => res.json())
     .then(data => {
+        // Limpa o container antes de preencher (evita duplicatas)
+        SiteContainer.innerHTML = "" 
+        
         proj = data.map(item => {
-            // Importante: .content.firstElementChild garante que pegamos a DIV e não texto vazio
-            const card = SiteTemplate.content.cloneNode(true).firstElementChild 
+            const cardClone = SiteTemplate.content.cloneNode(true)
+            const card = cardClone.querySelector(".projs")
             
             const siteElement = card.querySelector("[site]")
             const descElement = card.querySelector("[desc]")
 
-            siteElement.textContent = item.site;
-            siteElement.href = item.link;
-            descElement.textContent = item.desc;
+            siteElement.textContent = item.site
+            siteElement.href = item.link
+            descElement.textContent = item.desc
             
             SiteContainer.append(card)
             
             return { site: item.site, desc: item.desc, element: card }
-        });
+        })
     })
-    .catch(err => console.error("Falha fatal:", err));
-
-// Lógica da Barra de Busca
-searchInput.addEventListener("input", (e) => {
-    const value = e.target.value.toLowerCase()
-    proj.forEach(p => {
-        const isVisible = p.site.toLowerCase().includes(value) || 
-                          p.desc.toLowerCase().includes(value)
-        p.element.classList.toggle("hide", !isVisible)
-    })
-})
+    .catch(err => console.error("Erro ao carregar o site:", err))
