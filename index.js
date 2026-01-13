@@ -4,36 +4,46 @@ const searchInput = document.querySelector("#search")
 
 let proj = []
 
+// Lógica da Barra de Busca
+searchInput.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase()
+    proj.forEach(p => {
+        // Verifica se o texto pesquisado está no título ou na descrição
+        const isVisible = p.site.toLowerCase().includes(value) || 
+                          p.desc.toLowerCase().includes(value)
+        
+        // toggle adiciona a classe "hide" se isVisible for false
+        p.element.classList.toggle("hide", !isVisible)
+    })
+})
+
 // Busca e renderização inicial
 fetch("https://brunohudley.github.io/siteschool/sites.json")
     .then(res => res.json())
     .then(data => {
         proj = data.map(item => {
-            // 1. Clona o conteúdo do template
-            const card = SiteTemplate.content.cloneNode(true).querySelector(".projs")
+            // Clona o conteúdo do template
+            const cardClone = SiteTemplate.content.cloneNode(true)
+            // Pega o elemento real (a div .projs)
+            const card = cardClone.firstElementChild 
             
-            // 2. Seleciona os elementos INTERNOS do card clonado
             const siteElement = card.querySelector("[site]")
             const descElement = card.querySelector("[desc]")
 
-            // 3. Preenche os dados (Nome, Link e Descrição)
-            siteElement.textContent = item.site; // O texto do link
-            siteElement.href = item.link || item.url; // O endereço (ajuste conforme seu JSON)
-            descElement.textContent = item.desc;
+            // Preenche os dados
+            siteElement.textContent = item.site
+            siteElement.href = item.link
+            descElement.textContent = item.desc
             
-            // 4. Coloca o card na tela
+            // Adiciona ao container na tela
             SiteContainer.append(card)
             
-            // Retorna o objeto para a busca funcionar depois
-            return { site: item.site, desc: item.desc, element: card }
-        });
+            // Retorna o objeto para a lista de busca
+            return { 
+                site: item.site, 
+                desc: item.desc, 
+                element: card 
+            }
+        })
     })
-
-// Lógica da Barra de Busca
-searchInput.addEventListener("input", (e) => {
-    const value = e.target.value.toLowerCase()
-    proj.forEach(p => {
-        const isVisible = p.site.toLowerCase().includes(value) || p.desc.toLowerCase().includes(value)
-        p.element.classList.toggle("hide", !isVisible)
-    })
-})
+    .catch(err => console.error("Erro ao carregar o JSON. Verifique as vírgulas!", err))
