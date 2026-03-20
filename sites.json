@@ -2,11 +2,11 @@
     {
         "site": "Index page",
         "desc": "Pagina principal",
-        "link": "https://brunohudley.github.io/siteschool/index.html",
+        "link": "https://brunohudley.github.io"
     },
     {
-        "site": "Soft And Hard Skills"
+        "site": "Soft And Hard Skills",
         "desc": "Trabalho Socio Emocional",
-        "link": "https://brunohudley.github.io/siteschool/HardAndSoftSkills.pdf",
-    {
+        "link": "https://brunohudley.github.io"
+    }
 ]
